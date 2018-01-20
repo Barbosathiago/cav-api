@@ -4,3 +4,7 @@ venv/bin/
 venv/include/
 
 venv/
+
+*.db
+
+*.pyc

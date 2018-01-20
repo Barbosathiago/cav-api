@@ -1,0 +1,48 @@
+Resources
+
+Proprietario
+http://localhost:5000/proprietario -> POST -> Cria um proprietário
+http://localhost:5000/proprietario -> PUT -> Cria ou atualiza um proprietario
+http://localhost:5000/proprietario -> DELETE -> Apaga um proprietário
+
+ProprietarioById
+http://localhost:5000/proprietario/<string:id> -> GET -> Retorna um proprietario por id
+
+ProprietarioList
+http://localhost:5000/proprietarios -> POST -> Retorna uma lista de proprietarios de acordo com parametros passados
+
+
+DP
+http://localhost:5000/dp -> POST -> Cria uma DP
+http://localhost:5000/dp -> PUT -> Cria ou apaga uma DP
+http://localhost:5000/dp -> DELETE -> Apaga uma DP
+
+DPbyId
+http://localhost:5000/dp/<string:id> -> GET -> Retorna uma DP com o ID especificado
+
+DPList
+http://localhost:5000/dps -> GET -> Retorna uma lista de DP's filtradas pelos parametros passados
+
+
+Veiculo
+http://localhost:5000/veiculo ->  POST -> Cria um veículo
+http://localhost:5000/veiculo -> PUT -> Cria ou atualiza um veículo
+http://localhost:5000/veiculo -> DELETE -> Apaga um veículo
+
+VeiculoById
+http://localhost:5000/veiculo/<string:id> -> GET -> Retorna um veículo com o ID especificado
+
+VeiculoList
+http://localhost:5000/veiculos -> GET -> Retorna uma lista de veículos filtrados pelos parametros passados
+
+
+Ocorrencia
+http://localhost:5000/ocorrencia -> POST -> Cria uma ocorrência
+http://localhost:5000/ocorrencia -> PUT -> Cria ou atualiza uma ocorrência
+http://localhost:5000/ocorrencia -> DELETE -> Deleta uma ocorrência
+
+OcorrenciaById
+http://localhost:5000/ocorrencia/<string:id> -> GET -> Retorna uma ocorrência com o ID especificado
+
+OcorrenciaList
+http://localhost:5000/ocorrencias -> GET -> Retorna uma lista de ocorrências filtradas pelos parametros passados
