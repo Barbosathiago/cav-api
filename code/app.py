@@ -5,6 +5,7 @@ from flask_restful import Api
 # Importação dos models
 from resources.proprietario_resource import Proprietario, ProprietarioById, ProprietarioList
 from resources.dp_resource import Dp, DpById, DpList
+from resources.veiculo_resource import Veiculo, VeiculoById, VeiculoList
 #
 #
 #
@@ -27,6 +28,10 @@ api.add_resource(ProprietarioList, '/proprietarios')
 api.add_resource(Dp, '/dp')
 api.add_resource(DpById, '/dp/<string:id>')
 api.add_resource(DpList, '/dps')
+
+api.add_resource(Veiculo, '/veiculo')
+api.add_resource(VeiculoById, '/veiculo/<string:id>')
+api.add_resource(VeiculoList, '/veiculos')
 
 if __name__ == '__main__':
     from db import db

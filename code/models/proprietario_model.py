@@ -6,7 +6,7 @@ class ProprietarioModel(db.Model):
     nome = db.Column(db.String(120))
     contato = db.Column(db.String(25))
 
-    # add backref relationship here
+    veiculos = db.relationship('VeiculoModel', lazy='dynamic')
 
     def __init__(self, contato, nome, _id):
         self.id = _id
@@ -14,7 +14,7 @@ class ProprietarioModel(db.Model):
         self.nome = nome
 
     def json(self):
-        return {'nome': self.nome, 'contato': self.contato, 'id': self.id}
+        return {'nome': self.nome, 'contato': self.contato, 'id': self.id, 'veiculos': [veiculo.json() for veiculo in self.veiculos.all()]}
 
     # Procura proprietario por id
     @classmethod
