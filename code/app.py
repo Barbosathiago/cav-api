@@ -1,4 +1,5 @@
 # Importação das bibliotecas necessárias
+import os
 from flask import Flask
 from flask_restful import Api
 
@@ -11,14 +12,11 @@ from resources.veiculo_resource import Veiculo, VeiculoById, VeiculoList
 #
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'IAMTHEKIDYOUKNOWWHATIMEAN'
 api = Api(app)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 # Registro dos resources
 api.add_resource(Proprietario, '/proprietario')
