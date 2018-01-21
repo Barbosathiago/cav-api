@@ -7,6 +7,7 @@ from flask_restful import Api
 from resources.proprietario_resource import Proprietario, ProprietarioById, ProprietarioList
 from resources.dp_resource import Dp, DpById, DpList
 from resources.veiculo_resource import Veiculo, VeiculoById, VeiculoList
+from resources.ocorrencia_resource import Ocorrencia, OcorrenciabyId, OcorrenciaList
 #
 #
 #
@@ -30,6 +31,10 @@ api.add_resource(DpList, '/dps')
 api.add_resource(Veiculo, '/veiculo')
 api.add_resource(VeiculoById, '/veiculo/<string:id>')
 api.add_resource(VeiculoList, '/veiculos')
+
+api.add_resource(Ocorrencia, '/ocorrencia')
+api.add_resource(OcorrenciabyId, '/ocorrencia/<string:id>')
+api.add_resource(OcorrenciaList, '/ocorrencias')
 
 if __name__ == '__main__':
     from db import db

@@ -1,6 +1,8 @@
 from db import db
 
 class VeiculoModel(db.Model):
+    __tablename__ = 'veiculo'
+
     id = db.Column(db.Integer, primary_key=True)
     placa = db.Column(db.String(8))
     tipo = db.Column(db.String(50))
