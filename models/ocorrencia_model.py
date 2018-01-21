@@ -13,8 +13,8 @@ class OcorrenciaModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dp_id = db.Column(db.Integer, db.ForeignKey('dp.id'))
     veiculo_id = db.Column(db.Integer, db.ForeignKey('veiculo.id'))
-    veiculo = db.relationship('VeiculoModel')
-    dp = db.relationship('DpModel')
+    veiculo = db.relationship('VeiculoModel', uselist=False, backref=db.backref('ocorrencia'), lazy=True)
+    dp = db.relationship('DpModel', uselist=False, backref=db.backref('ocorrencia'), lazy=True)
 
 
     # def __init__(self, numeroOcorrencia, localOcorrencia, tipo, observacoes, situacao, data,  _id):
@@ -38,8 +38,8 @@ class OcorrenciaModel(db.Model):
             'observacoes': self.observacoes,
             'situacao': self.situacao,
             'data': self.data.strftime('%Y-%m-%d'),
-            'dp_id': self.dp_id,
-            'veiculo_id': self.veiculo_id,
+            'dp': self.dp.json(),
+            'veiculo': self.veiculo.json(),
             'id': self.id,
             'localOcorrencia': self.localOcorrencia
             }

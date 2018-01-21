@@ -11,7 +11,7 @@ class VeiculoModel(db.Model):
     numeroMotor = db.Column(db.String(15))
     cor = db.Column(db.String(50))
     proprietario_id = db.Column(db.Integer, db.ForeignKey('proprietario.id'))
-    proprietario = db.relationship('ProprietarioModel')
+    proprietario = db.relationship('ProprietarioModel', uselist=False, backref=db.backref('veiculo'), lazy=True)
 
     def __init__(self, id, placa, tipo, ano, chassis, numeroMotor, cor, proprietario_id):
         self.id = id
@@ -24,7 +24,7 @@ class VeiculoModel(db.Model):
         self.proprietario_id = proprietario_id
 
     def json(self):
-        return {'id': self.id, 'placa': self.placa, 'tipo': self.tipo, 'ano': self.ano,'chassis': self.chassis,'numeroMotor': self.numeroMotor,'cor': self.cor, 'proprietario_id': self.proprietario_id}
+        return {'id': self.id, 'placa': self.placa, 'tipo': self.tipo, 'ano': self.ano,'chassis': self.chassis,'numeroMotor': self.numeroMotor,'cor': self.cor, 'proprietario_id': self.proprietario_id, 'proprietario': self.proprietario.json()}
 
     @classmethod
     def find_by_id(cls, id):
