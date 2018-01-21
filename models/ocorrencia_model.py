@@ -25,6 +25,7 @@ class OcorrenciaModel(db.Model):
         self.tipo = tipo
         self.observacoes = observacoes
         self.situacao = situacao
+        self.localOcorrencia = localOcorrencia
         self.data = datetime.strptime(data,'%Y-%m-%d').date()
         self.dp_id = dp_id
         self.veiculo_id = veiculo_id
