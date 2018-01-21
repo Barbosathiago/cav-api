@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 
 from models.dp_model import DpModel
+
 class Dp(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('nome',

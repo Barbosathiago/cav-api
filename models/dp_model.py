@@ -1,7 +1,8 @@
 from db import db
 
 class DpModel(db.Model):
-    __tablenaame__ = 'dp'
+    __tablename__ = 'dp'
+    
     nome = db.Column(db.String(120))
     id = db.Column(db.Integer, primary_key=True)
 
