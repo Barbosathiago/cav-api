@@ -10,7 +10,7 @@ Para conferir as dependencias, ver aquivo [requirements.txt](https://github.com/
 
 ## Configurando a aplicação
 
-Recomenda-se a utilização de um (Ambiente Virtual)[https://virtualenv.pypa.io/en/stable/] caso queria rodar a aplicação sem sua máquina sem alterar suas configurações.
+Recomenda-se a utilização de um [Ambiente Virtual](https://virtualenv.pypa.io/en/stable/) caso queria rodar a aplicação sem sua máquina sem alterar suas configurações.
 
 - Baixe a última release disponível ou clone-a para um repositório local
 - Com o python, execute o arquivo app.py `python3 app.py` no diretório raiz da aplicação
