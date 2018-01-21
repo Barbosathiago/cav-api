@@ -2,7 +2,7 @@
 import os
 from flask import Flask
 from flask_restful import Api
-# from flask_cors import CORS
+from flask_cors import CORS
 
 # Importação dos models
 from resources.proprietario_resource import Proprietario, ProprietarioById, ProprietarioList
@@ -14,7 +14,7 @@ from resources.ocorrencia_resource import Ocorrencia, OcorrenciabyId, Ocorrencia
 #
 
 app = Flask(__name__)
-# CORS(app)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = 'IAMTHEKIDYOUKNOWWHATIMEAN'
