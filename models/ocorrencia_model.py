@@ -39,7 +39,8 @@ class OcorrenciaModel(db.Model):
             'data': self.data.strftime('%Y-%m-%d'),
             'dp_id': self.dp_id,
             'veiculo_id': self.veiculo_id,
-            'id': self.id
+            'id': self.id,
+            'localOcorrencia': self.localOcorrencia
             }
 
     @classmethod
