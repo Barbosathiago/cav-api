@@ -9,6 +9,7 @@ from resources.proprietario_resource import Proprietario, ProprietarioById, Prop
 from resources.dp_resource import Dp, DpById, DpList
 from resources.veiculo_resource import Veiculo, VeiculoById, VeiculoList
 from resources.ocorrencia_resource import Ocorrencia, OcorrenciabyId, OcorrenciaList
+from resources.tipoOcorrencia_resource import TipoOcorrencia, TipoById, TipoList
 #
 #
 #
@@ -41,6 +42,10 @@ api.add_resource(VeiculoList, '/veiculos')
 api.add_resource(Ocorrencia, '/ocorrencia')
 api.add_resource(OcorrenciabyId, '/ocorrencia/<string:id>')
 api.add_resource(OcorrenciaList, '/ocorrencias')
+
+api.add_resource(TipoOcorrencia, '/ocorrencia/tipo')
+api.add_resource(TipoById, '/ocorrencia/tipo/<string:id>')
+api.add_resource(TipoList, '/ocorrencia/tipos')
 
 if __name__ == '__main__':
     from db import db
