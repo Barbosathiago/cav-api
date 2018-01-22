@@ -1,5 +1,6 @@
 # Importando bibliotecas
 from flask_restful import Resource, reqparse
+from flask import request
 from datetime import datetime
 
 # Importando models
@@ -88,6 +89,7 @@ class Ocorrencia(Resource):
 
 class OcorrenciabyId(Resource):
     def get(self, id):
+
         oco = OcorrenciaModel.find_by_id(id)
         if oco:
             return oco.json()
@@ -96,4 +98,37 @@ class OcorrenciabyId(Resource):
 
 class OcorrenciaList(Resource):
     def get(self):
-        return {'ocorrencias': [oco.json() for oco in OcorrenciaModel.query.all()]}
+        local = request.args.get('local')
+        if not local:
+            local = ''
+        placa = request.args.get('placa')
+        if not placa:
+            placa = ''
+        chassis = request.args.get('chassis')
+        if not chassis:
+            chassis = ''
+        numeroMotor = request.args.get('numeroMotor')
+        if not numeroMotor:
+            numeroMotor = ''
+        nomeProp = request.args.get('nomeProp')
+        if not nomeProp:
+            nomeProp = ''
+        numeroOcorrencia = request.args.get('numeroOcorrencia')
+        if not numeroOcorrencia:
+            numeroOcorrencia = ''
+        localRegistro = request.args.get('localRegistro')
+        if not localRegistro:
+            localRegistro = ''
+        tipoOcorrencia = request.args.get('tipoOcorrencia')
+        if not tipoOcorrencia:
+            tipoOcorrencia = ''
+        dataInicial = request.args.get('dataInicial')
+        if not dataInicial:
+            dataInicial = None
+        dataFinal = request.args.get('dataFinal')
+        if not dataFinal:
+            dataFinal = None
+        situacao = request.args.get('situacao')
+        if not situacao:
+            situacao = ''
+        return {'ocorrencias': [oco.json() for oco in OcorrenciaModel.search_by_params(local=local, placa=placa, chassis=chassis, numeroMotor=numeroMotor, nomeProp=nomeProp, numeroOcorrencia=numeroOcorrencia, localRegistro=localRegistro, tipoOcorrencia=tipoOcorrencia, dataInicial=dataInicial, dataFinal=dataFinal,situacao=situacao)]}
