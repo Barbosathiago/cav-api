@@ -4,29 +4,32 @@ from datetime import datetime
 from models.veiculo_model import VeiculoModel
 from models.proprietario_model import ProprietarioModel
 from models.dp_model import DpModel
+from models.tipoOcorrencia_model import TipoOcorrenciaModel
 
 class OcorrenciaModel(db.Model):
     __tablename__ = 'ocorrencia'
 
     numeroOcorrencia = db.Column(db.String(50), unique=True)
     localOcorrencia = db.Column(db.String(450))
-    tipo = db.Column(db.String(50))
+    # tipo = db.Column(db.String(50))
     observacoes = db.Column(db.String(450))
     situacao = db.Column(db.String(50))
     data = db.Column(db.Date())
     id = db.Column(db.Integer, primary_key=True)
     dp_id = db.Column(db.Integer, db.ForeignKey('dp.id'))
+    dp = db.relationship('DpModel', uselist=False, backref=db.backref('ocorrencia'), lazy=True)
     veiculo_id = db.Column(db.Integer, db.ForeignKey('veiculo.id'))
     veiculo = db.relationship('VeiculoModel', uselist=False, backref=db.backref('ocorrencia'), lazy=True)
-    dp = db.relationship('DpModel', uselist=False, backref=db.backref('ocorrencia'), lazy=True)
+    tipo_id = db.Column(db.Integer, db.ForeignKey('tipo_ocorrencia.id'))
+    tipo = db.relationship('TipoOcorrenciaModel', uselist=False, backref=db.backref('ocorrencia'), lazy=True)
 
 
     # def __init__(self, numeroOcorrencia, localOcorrencia, tipo, observacoes, situacao, data,  _id):
     # def __init__(self, numeroOcorrencia, localOcorrencia, tipo, observacoes, situacao, data, veiculo_id, _id):
-    def __init__(self, numeroOcorrencia, localOcorrencia, tipo, observacoes, situacao, data, dp_id, veiculo_id, _id):
+    def __init__(self, numeroOcorrencia, localOcorrencia, tipo_id, observacoes, situacao, data, dp_id, veiculo_id, _id):
         self.id = _id
         self.numeroOcorrencia = numeroOcorrencia
-        self.tipo = tipo
+        self.tipo_id = tipo_id
         self.observacoes = observacoes
         self.situacao = situacao
         self.localOcorrencia = localOcorrencia
@@ -45,7 +48,8 @@ class OcorrenciaModel(db.Model):
             'dp': self.dp.json(),
             'veiculo': self.veiculo.json(),
             'id': self.id,
-            'localOcorrencia': self.localOcorrencia
+            'localOcorrencia': self.localOcorrencia,
+            'tipo': self.tipo.json()
             }
 
     @classmethod
@@ -60,60 +64,62 @@ class OcorrenciaModel(db.Model):
         db.session.delete(self)
         db.session.commit()
     @classmethod
-    def search_by_params(cls, local, placa, chassis, numeroMotor, nomeProp, numeroOcorrencia, dp, tipoOcorrencia, dataInicial, dataFinal, situacao):
+    def search_by_params(cls, local, placa, chassis, numeroMotor, nomeProp, numeroOcorrencia, dp, tipo, dataInicial, dataFinal, situacao):
         ocorrencias = []
         # Filtro completo
         if (dp and dataInicial and dataFinal):
             print('Entrou no geral')
-            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
             filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
             filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
             filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
             filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
-            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(TipoOcorrenciaModel.id == tipo).\
             filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
             filter(OcorrenciaModel.data.between(dataInicial, dataFinal)).\
             filter(DpModel.id == dp)
 
         elif (dataInicial and dataFinal):
             print('Apenas datas!')
-            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
             filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
             filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
             filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
             filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
-            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(TipoOcorrenciaModel.id == tipo).\
             filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
             filter(OcorrenciaModel.data.between(dataInicial, dataFinal))
 
         elif dp:
             print('pegou o dp!')
-            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
             filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
             filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
             filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
             filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
-            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(TipoOcorrenciaModel.id == tipo).\
             filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
             filter(DpModel.id == dp)
 
 
-        else:
+        elif local or placa or chassis or numeroMotor or nomeProp or numeroOcorrencia or tipo or situacao:
             print('Nenhum!')
-            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
             filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
             filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
             filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
             filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
-            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(TipoOcorrenciaModel.id == tipo).\
             filter(OcorrenciaModel.situacao.like("%"+situacao+"%"))
+        else:
+            ocorrencias = db.session.query(OcorrenciaModel).all()
 
         return ocorrencias
