@@ -116,9 +116,10 @@ class OcorrenciaList(Resource):
         numeroOcorrencia = request.args.get('numeroOcorrencia')
         if not numeroOcorrencia:
             numeroOcorrencia = ''
-        localRegistro = request.args.get('localRegistro')
-        if not localRegistro:
-            localRegistro = ''
+        dp = request.args.get('dp')
+        print(dp)
+        if not dp:
+            dp = None
         tipoOcorrencia = request.args.get('tipoOcorrencia')
         if not tipoOcorrencia:
             tipoOcorrencia = ''
@@ -131,4 +132,12 @@ class OcorrenciaList(Resource):
         situacao = request.args.get('situacao')
         if not situacao:
             situacao = ''
-        return {'ocorrencias': [oco.json() for oco in OcorrenciaModel.search_by_params(local=local, placa=placa, chassis=chassis, numeroMotor=numeroMotor, nomeProp=nomeProp, numeroOcorrencia=numeroOcorrencia, localRegistro=localRegistro, tipoOcorrencia=tipoOcorrencia, dataInicial=dataInicial, dataFinal=dataFinal,situacao=situacao)]}
+        if (dataInicial and dataFinal):
+            d1 = datetime.strptime(dataInicial,'%Y-%m-%d').date()
+            d2 = datetime.strptime(dataFinal,'%Y-%m-%d').date()
+            if dataFinal < dataInicial:
+                print('bugou')
+                return {'message': 'A data final não pode ser maior que a inicial!'}, 400
+            elif (not dataInicial) or (not dataFinal):
+                return {'message': 'Por favor, cheque se os valores da data inicial ou final foram informados!'}
+        return {'ocorrencias': [oco.json() for oco in OcorrenciaModel.search_by_params(local=local, placa=placa, chassis=chassis, numeroMotor=numeroMotor, nomeProp=nomeProp, numeroOcorrencia=numeroOcorrencia, dp=dp, tipoOcorrencia=tipoOcorrencia, dataInicial=dataInicial, dataFinal=dataFinal,situacao=situacao)]}

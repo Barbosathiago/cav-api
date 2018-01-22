@@ -60,15 +60,60 @@ class OcorrenciaModel(db.Model):
         db.session.delete(self)
         db.session.commit()
     @classmethod
-    def search_by_params(cls, local, placa, chassis, numeroMotor, nomeProp, numeroOcorrencia, localRegistro, tipoOcorrencia, dataInicial, dataFinal, situacao):
-        ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
-        filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
-        filter(VeiculoModel.placa.like("%"+placa+"%")).\
-        filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
-        filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
-        filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
-        filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
-        filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
-        filter(OcorrenciaModel.situacao.like("%"+situacao+"%"))
-        # filter(DpModel.id.like("%"+localRegistro+"%")).\ Corrigir o nome da propriedade, visto que o que deverá ser passado é o id
+    def search_by_params(cls, local, placa, chassis, numeroMotor, nomeProp, numeroOcorrencia, dp, tipoOcorrencia, dataInicial, dataFinal, situacao):
+        ocorrencias = []
+        # Filtro completo
+        if (dp and dataInicial and dataFinal):
+            print('Entrou no geral')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
+            filter(OcorrenciaModel.data.between(dataInicial, dataFinal)).\
+            filter(DpModel.id == dp)
+
+        elif (dataInicial and dataFinal):
+            print('Apenas datas!')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
+            filter(OcorrenciaModel.data.between(dataInicial, dataFinal))
+
+        elif dp:
+            print('pegou o dp!')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
+            filter(DpModel.id == dp)
+
+
+        else:
+            print('Nenhum!')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+            filter(OcorrenciaModel.situacao.like("%"+situacao+"%"))
+
         return ocorrencias
