@@ -1,6 +1,10 @@
 from db import db
 from datetime import datetime
 
+from models.veiculo_model import VeiculoModel
+from models.proprietario_model import ProprietarioModel
+from models.dp_model import DpModel
+
 class OcorrenciaModel(db.Model):
     __tablename__ = 'ocorrencia'
 
@@ -55,3 +59,16 @@ class OcorrenciaModel(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+    @classmethod
+    def search_by_params(cls, local, placa, chassis, numeroMotor, nomeProp, numeroOcorrencia, localRegistro, tipoOcorrencia, dataInicial, dataFinal, situacao):
+        ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).\
+        filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+        filter(VeiculoModel.placa.like("%"+placa+"%")).\
+        filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+        filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+        filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+        filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+        filter(OcorrenciaModel.tipo.like("%"+tipoOcorrencia+"%")).\
+        filter(OcorrenciaModel.situacao.like("%"+situacao+"%"))
+        # filter(DpModel.id.like("%"+localRegistro+"%")).\ Corrigir o nome da propriedade, visto que o que deverá ser passado é o id
+        return ocorrencias
