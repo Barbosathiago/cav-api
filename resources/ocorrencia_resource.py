@@ -13,7 +13,7 @@ class Ocorrencia(Resource):
         required=True,
         help="This field cannot be left blank!"
     )
-    parser.add_argument('tipo',
+    parser.add_argument('tipo_id',
         type=str,
         required=True,
         help="This field cannot be left blank!"
@@ -57,7 +57,7 @@ class Ocorrencia(Resource):
 
         if OcorrenciaModel.find_by_id(data['id']):
             return {'message': 'Uma ocorrencia com este ID ja existe em sua base de dados'}, 400
-        ocorrencia = OcorrenciaModel(localOcorrencia=data['localOcorrencia'], tipo=data['tipo'], observacoes=data['observacoes'], situacao=data['situacao'], data=data['data'], dp_id=data['dp_id'], veiculo_id=data['veiculo_id'], _id=None, numeroOcorrencia=data['numeroOcorrencia'])
+        ocorrencia = OcorrenciaModel(localOcorrencia=data['localOcorrencia'], tipo_id=data['tipo_id'], observacoes=data['observacoes'], situacao=data['situacao'], data=data['data'], dp_id=data['dp_id'], veiculo_id=data['veiculo_id'], _id=None, numeroOcorrencia=data['numeroOcorrencia'])
         ocorrencia.save_to_db()
         return ocorrencia.json()
         # try:
@@ -71,11 +71,11 @@ class Ocorrencia(Resource):
 
         ocorrencia = OcorrenciaModel.find_by_id(data['id'])
         if ocorrencia is None:
-            ocorrencia = OcorrenciaModel(localOcorrencia=data['localOcorrencia'], tipo=data['tipo'], observacoes=data['observacoes'], situacao=data['situacao'], data=['data'], dp_id=data['dp_id'], veiculo_id=data['veiculo_id'], _id=None, numeroOcorrencia=data['numeroOcorrencia'])
+            ocorrencia = OcorrenciaModel(localOcorrencia=data['localOcorrencia'], tipo_id=data['tipo_id'], observacoes=data['observacoes'], situacao=data['situacao'], data=['data'], dp_id=data['dp_id'], veiculo_id=data['veiculo_id'], _id=None, numeroOcorrencia=data['numeroOcorrencia'])
         else:
             ocorrencia.numeroOcorrencia = data['numeroOcorrencia']
             ocorrencia.localOcorrencia = data['localOcorrencia']
-            ocorrencia.tipo = data['tipo']
+            ocorrencia.tipo_id = data['tipo_id']
             ocorrencia.observacoes = data['observacoes']
             ocorrencia.situacao = data['situacao']
             ocorrencia.data = datetime.strptime(data['data'],'%Y-%m-%d').date()
@@ -116,13 +116,13 @@ class OcorrenciaList(Resource):
         numeroOcorrencia = request.args.get('numeroOcorrencia')
         if not numeroOcorrencia:
             numeroOcorrencia = ''
-        dp = request.args.get('dp')
+        dp = request.args.get('dp_id')
         print(dp)
         if not dp:
             dp = None
-        tipoOcorrencia = request.args.get('tipoOcorrencia')
-        if not tipoOcorrencia:
-            tipoOcorrencia = ''
+        tipo = request.args.get('tipo_id')
+        if not tipo:
+            tipo = ''
         dataInicial = request.args.get('dataInicial')
         if not dataInicial:
             dataInicial = None
@@ -140,4 +140,4 @@ class OcorrenciaList(Resource):
                 return {'message': 'A data final não pode ser maior que a inicial!'}, 400
             elif (not dataInicial) or (not dataFinal):
                 return {'message': 'Por favor, cheque se os valores da data inicial ou final foram informados!'}
-        return {'ocorrencias': [oco.json() for oco in OcorrenciaModel.search_by_params(local=local, placa=placa, chassis=chassis, numeroMotor=numeroMotor, nomeProp=nomeProp, numeroOcorrencia=numeroOcorrencia, dp=dp, tipoOcorrencia=tipoOcorrencia, dataInicial=dataInicial, dataFinal=dataFinal,situacao=situacao)]}
+        return {'ocorrencias': [oco.json() for oco in OcorrenciaModel.search_by_params(local=local, placa=placa, chassis=chassis, numeroMotor=numeroMotor, nomeProp=nomeProp, numeroOcorrencia=numeroOcorrencia, dp=dp, tipo=tipo, dataInicial=dataInicial, dataFinal=dataFinal,situacao=situacao)]}
