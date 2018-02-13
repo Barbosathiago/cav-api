@@ -67,8 +67,8 @@ class OcorrenciaModel(db.Model):
     def search_by_params(cls, local, placa, chassis, numeroMotor, nomeProp, numeroOcorrencia, dp, tipo, dataInicial, dataFinal, situacao):
         ocorrencias = []
         # Filtro completo
-        if (dp and dataInicial and dataFinal):
-            print('Entrou no geral')
+        if (dp and dataInicial and dataFinal and tipo):
+            print('Pesquisa contém DP, Tipo e Data Inicial e Data Final!')
             ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
@@ -81,8 +81,34 @@ class OcorrenciaModel(db.Model):
             filter(OcorrenciaModel.data.between(dataInicial, dataFinal)).\
             filter(DpModel.id == dp)
 
+        elif (dp and dataInicial and dataFinal):
+            print('Pesquisa contém DP, Data Inicial e Data Final!')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
+            filter(OcorrenciaModel.data.between(dataInicial, dataFinal)).\
+            filter(DpModel.id == dp)
+
+        elif (dp and tipo):
+            print('Pesquisa contém DP e Tipo!')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(TipoOcorrenciaModel.id == tipo).\
+            filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
+            filter(DpModel.id == dp)
+
         elif (dataInicial and dataFinal):
-            print('Apenas datas!')
+            print('Pesquisa contém Data!')
             ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
@@ -95,7 +121,7 @@ class OcorrenciaModel(db.Model):
             filter(OcorrenciaModel.data.between(dataInicial, dataFinal))
 
         elif dp:
-            print('pegou o dp!')
+            print('Pesquisa contém DP!')
             ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
@@ -106,10 +132,9 @@ class OcorrenciaModel(db.Model):
             filter(TipoOcorrenciaModel.id == tipo).\
             filter(OcorrenciaModel.situacao.like("%"+situacao+"%")).\
             filter(DpModel.id == dp)
-
-
-        elif local or placa or chassis or numeroMotor or nomeProp or numeroOcorrencia or tipo or situacao:
-            print('Nenhum!')
+        
+        elif tipo:
+            print('Pesquisa contém Tipo!')
             ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
             filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
             filter(VeiculoModel.placa.like("%"+placa+"%")).\
@@ -118,7 +143,20 @@ class OcorrenciaModel(db.Model):
             filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
             filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
             filter(TipoOcorrenciaModel.id == tipo).\
-            filter(OcorrenciaModel.situacao.like("%"+situacao+"%"))
+            filter(OcorrenciaModel.situacao == situacao)
+
+
+        elif local or placa or chassis or numeroMotor or nomeProp or numeroOcorrencia or tipo or situacao:            
+            print('Nenhum!')
+            ocorrencias = db.session.query(OcorrenciaModel).join(VeiculoModel).join(ProprietarioModel).join(DpModel).join(TipoOcorrenciaModel).\
+            filter(OcorrenciaModel.localOcorrencia.like("%"+local+"%")).\
+            filter(VeiculoModel.placa.like("%"+placa+"%")).\
+            filter(VeiculoModel.chassis.like("%"+chassis+"%")).\
+            filter(VeiculoModel.numeroMotor.like("%"+numeroMotor+"%")).\
+            filter(ProprietarioModel.nome.like("%"+nomeProp+"%")).\
+            filter(OcorrenciaModel.numeroOcorrencia.like("%"+numeroOcorrencia+"%")).\
+            filter(OcorrenciaModel.situacao == situacao)
+            # filter(TipoOcorrenciaModel.id == tipo).\
         else:
             ocorrencias = db.session.query(OcorrenciaModel).all()
 
